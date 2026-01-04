@@ -415,3 +415,41 @@ document.getElementById("logoutBtn")?.addEventListener("click", async () => {
   await supabase.auth.signOut();
   window.location.href = "login/login.html";
 });
+
+
+
+
+
+
+// ================= MOBILE MENU FIX (Force Close) =================
+
+const closeBtn = document.getElementById('mobileMenuCloseBtn');
+const navbarCollapse = document.getElementById('navbarNav');
+
+// 1. Cross Button Logic
+if (closeBtn && navbarCollapse) {
+    closeBtn.addEventListener('click', () => {
+        console.log("Cross button clicked!"); // Check console if clicked
+        
+        // Koshish karo Bootstrap ke tariqe se band karne ki
+        try {
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navbarCollapse);
+            bsCollapse.hide(); 
+        } catch (error) {
+            // Agar Bootstrap fail ho, to zabardasti class hata do
+            console.log("Force closing menu...");
+            navbarCollapse.classList.remove('show');
+        }
+    });
+}
+
+// 2. Auto-Close on Link Click (Taake link pe jane ke baad menu band ho)
+const navLinks = document.querySelectorAll('.nav-link');
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        if (navbarCollapse.classList.contains('show')) {
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navbarCollapse);
+            bsCollapse.hide();
+        }
+    });
+});
