@@ -1,33 +1,37 @@
 import supabase from "./config.js";
 
-// ================================================================
-//             HOME PAGE LOGIC (Complete & Fixed)
-// ================================================================
+// ================================================================   SignUp Page Functionality   ================================================================
 
-// Elements
 const userImg = document.getElementById("user-img");
-const userName = document.getElementById("user-name");
-const welcomeMsg = document.getElementById("welcome-msg");
-const postsContainer = document.getElementById("postsContainer");
+// console.log(userImg);
 
-// Navbar Links
+const userName = document.getElementById("user-name");
+// console.log(userName);
+
+const welcomeMsg = document.getElementById("welcome-msg");
+// console.log(welcomeMsg);
+
+const postsContainer = document.getElementById("postsContainer");
+// console.log(postsContainer);
+
 const navHome = document.getElementById("nav-home");
+// console.log(navHome);
+
 const navMyPosts = document.getElementById("nav-myposts");
+// console.log(navMyPosts);
 
 let currentUserEmail = "";
 
-// ================= 1. INITIALIZE (Login Check & Load) =================
+// ================= 1. INITIALIZE =================
 async function init() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Agar login nahi hai to wapis bhejo
   if (!user) return (window.location.href = "login/login.html");
 
   currentUserEmail = user.email;
 
-  // Load User Profile
   const { data } = await supabase
     .from("1.Users")
     .select("username, profile_pic")
@@ -42,9 +46,9 @@ async function init() {
   }
   if (welcomeMsg) {
     welcomeMsg.innerHTML = `Welcome back, ${data?.username || "User"}! 👋`;
+    // console.log(welcomeMsg);
   }
 
-  // Default: Load All Posts
   loadPosts("all");
 }
 init();
@@ -82,11 +86,9 @@ async function loadPosts(filterType) {
   posts.forEach((post) => {
     const postUser = post.user_email ? post.user_email.split("@")[0] : "User";
 
-    // Action Buttons Logic
     let actionButtons = "";
 
     if (filterType === "my") {
-      // My Posts tab mein Edit/Delete dikhao
       actionButtons = `
             <div class="d-flex gap-2 mt-3">
                 <button class="btn btn-sm btn-outline-primary w-100" onclick="openEditModal('${post.id}')">
@@ -98,7 +100,6 @@ async function loadPosts(filterType) {
             </div>
         `;
     } else {
-      // Home tab mein "Read More" dikhao (Link FIXED: detail.html)
       actionButtons = `
             <a href="detail.html?id=${post.id}" class="btn btn-link text-primary p-0 text-decoration-none fw-bold small mt-3">
                 Read More <i class="fa-solid fa-arrow-right ms-1"></i>
@@ -135,7 +136,6 @@ async function loadPosts(filterType) {
   });
 }
 
-// Global scope mein functions (HTML onclick ke liye)
 window.deletePost = deletePost;
 window.openEditModal = openEditModal;
 
@@ -157,6 +157,7 @@ async function deletePost(postId, imageUrl) {
       // 1. Delete Image
       if (imageUrl) {
         const fileName = imageUrl.split("/").pop();
+        console.log(fileName);
         await supabase.storage.from("post-images").remove([fileName]);
       }
 
@@ -175,7 +176,6 @@ async function deletePost(postId, imageUrl) {
 
 // ================= 4. EDIT POST FUNCTIONALITY =================
 
-// A. Modal Open
 async function openEditModal(postId) {
   const { data: post, error } = await supabase
     .from("posts")
@@ -185,6 +185,7 @@ async function openEditModal(postId) {
 
   if (error) {
     Swal.fire("Error", "Could not fetch post details", "error");
+    // console.log(error);
     return;
   }
 
@@ -199,7 +200,6 @@ async function openEditModal(postId) {
   myModal.show();
 }
 
-// B. Save Changes
 const editForm = document.getElementById("editPostForm");
 if (editForm) {
   editForm.addEventListener("submit", async (e) => {
@@ -211,23 +211,36 @@ if (editForm) {
     updateBtn.disabled = true;
 
     const postId = document.getElementById("edit-post-id").value;
+    // console.log(postId);
+
     const oldImageUrl = document.getElementById("edit-old-image").value;
+    // console.log(oldImageUrl);
     const title = document.getElementById("edit-post-title").value;
+    // console.log(title);
+
     const content = document.getElementById("edit-post-content").value;
+    // console.log(content);
+
     const imageFile = document.getElementById("edit-post-image").files[0];
+    // console.log(imageFile);
 
     let finalImageUrl = oldImageUrl;
+    // console.log(finalImageUrl);
 
     try {
       if (imageFile) {
         if (oldImageUrl) {
           const oldFileName = oldImageUrl.split("/").pop();
+          // console.log(oldFileName);
+
           await supabase.storage.from("post-images").remove([oldFileName]);
         }
         const {
           data: { user },
         } = await supabase.auth.getUser();
         const newFileName = `post_${user.id}_${Date.now()}`;
+        // console.log(newFileName);
+
         await supabase.storage
           .from("post-images")
           .upload(newFileName, imageFile);
@@ -235,6 +248,7 @@ if (editForm) {
           data: { publicUrl },
         } = supabase.storage.from("post-images").getPublicUrl(newFileName);
         finalImageUrl = publicUrl;
+        // console.log(finalImageUrl);
       }
 
       const { error } = await supabase
@@ -256,7 +270,11 @@ if (editForm) {
       });
 
       const modalEl = document.getElementById("editPostModal");
+      // console.log(modalEl);
+
       const modal = bootstrap.Modal.getInstance(modalEl);
+      // console.log(modal);
+
       modal.hide();
 
       loadPosts("my");
@@ -278,16 +296,23 @@ if (postForm) {
     publishBtn.innerHTML =
       '<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';
     publishBtn.disabled = true;
+    // console.log(publishBtn);
 
     const title = document.getElementById("post-title").value;
+    // console.log(title);
+
     const content = document.getElementById("post-content").value;
+    // console.log(content);
+
     const imageFile = document.getElementById("post-image").files[0];
+    // console.log(imageFile);
 
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       const fileName = `post_${user.id}_${Date.now()}`;
+      // console.log(fileName);
 
       await supabase.storage.from("post-images").upload(fileName, imageFile);
       const {
@@ -329,7 +354,10 @@ if (postForm) {
 
 // ================= 6. PROFILE UPLOAD & NAVBAR =================
 const profileTrigger = document.getElementById("profile-trigger");
+// console.log(profileTrigger);
+
 const profileUpload = document.getElementById("profile-upload");
+// console.log(profileUpload);
 
 if (profileTrigger && profileUpload) {
   profileTrigger.addEventListener("click", () => profileUpload.click());

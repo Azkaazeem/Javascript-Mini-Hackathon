@@ -1,11 +1,15 @@
 import supabase from "./config.js";
 
 const contentArea = document.getElementById("blog-content-area");
+// console.log(contentArea);
 
 async function loadPostDetails() {
-    // 1. URL se ID nikalo
+
     const params = new URLSearchParams(window.location.search);
+    // console.log(params);
+
     const postId = params.get('id');
+    // console.log(postId);
 
     if (!postId) {
         Swal.fire("Error", "No Post ID found!", "error").then(() => window.location.href = "home.html");
@@ -13,7 +17,6 @@ async function loadPostDetails() {
     }
 
     try {
-        // 2. Supabase se Post ka data lao
         const { data: post, error } = await supabase
             .from('posts')
             .select('*')
@@ -21,16 +24,16 @@ async function loadPostDetails() {
             .single();
 
         if (error) throw error;
+        // console.log(error);
 
-        // 3. Date Formatting
         const date = new Date(post.created_at).toLocaleDateString('en-US', {
             year: 'numeric', month: 'long', day: 'numeric'
         });
+        // console.log(date);
 
-        // 4. User Name Logic (Email se nikalo)
         const authorName = post.user_email ? post.user_email.split('@')[0] : "Unknown Author";
+        // console.log(authorName);
 
-        // 5. HTML Inject Karo (Better Styling)
         contentArea.innerHTML = `
             <a href="home.html" class="back-btn">
                 <i class="fa-solid fa-arrow-left"></i> Back to Feed
@@ -65,5 +68,4 @@ async function loadPostDetails() {
     }
 }
 
-// Call function
 loadPostDetails();

@@ -86,7 +86,7 @@ async function signUp(e) {
             phone: sPhn.value,
             role: "user",
           });
-          // Signup ke baad Login page par bhejna behtar hai
+          
           window.location.href = "login/login.html"; 
         }
       );

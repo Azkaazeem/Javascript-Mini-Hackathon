@@ -260,9 +260,9 @@ h1 {
 
 /* GLOBAL SETTINGS */
 :root {
-    --primary: #4f46e5; /* Professional Indigo */
+    --primary: #4f46e5;
     --primary-hover: #4338ca;
-    --bg-color: #f8fafc; /* Very light cool grey */
+    --bg-color: #f8fafc;
     --text-dark: #1e293b;
     --text-muted: #64748b;
 }
@@ -273,7 +273,6 @@ body {
     color: var(--text-dark);
 }
 
-/* NAVBAR */
 .navbar {
     background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
@@ -283,7 +282,6 @@ body {
     color: var(--primary) !important;
 }
 
-/* BUTTONS */
 .btn-primary {
     background-color: var(--primary);
     border-color: var(--primary);
@@ -296,7 +294,6 @@ body {
     box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
 }
 
-/* CARD STYLING */
 .post-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
@@ -316,15 +313,14 @@ body {
 .card-img-top {
     height: 100%;
     width: 100%;
-    object-fit: cover; /* Image ko stretch hone se bachata hai */
+    object-fit: cover;
     transition: transform 0.5s ease;
 }
 
 .post-card:hover .card-img-top {
-    transform: scale(1.05); /* Slight zoom effect on hover */
+    transform: scale(1.05);
 }
 
-/* TYPOGRAPHY TWEAKS */
 .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -332,7 +328,6 @@ body {
     overflow: hidden;
 }
 
-/* FORM STYLING */
 .form-control:focus {
     box-shadow: none;
     border: 1px solid var(--primary);
